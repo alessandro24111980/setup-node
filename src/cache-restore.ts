@@ -11,10 +11,7 @@ import {
   PackageManagerInfo
 } from './cache-utils';
 
-export const restoreCache = async (
-  packageManager: string,
-  cacheDependencyPath?: string
-) => {
+export const restoreCache = async (packageManager: string) => {
   const packageManagerInfo = await getPackageManagerInfo(packageManager);
   if (!packageManagerInfo) {
     throw new Error(`Caching for '${packageManager}' is not supported`);
@@ -25,16 +22,8 @@ export const restoreCache = async (
     packageManagerInfo,
     packageManager
   );
-  const lockFilePath = cacheDependencyPath
-    ? cacheDependencyPath
-    : findLockFile(packageManagerInfo);
+  const lockFilePath = findLockFile(packageManagerInfo);
   const fileHash = await glob.hashFiles(lockFilePath);
-
-  if (!fileHash) {
-    throw new Error(
-      'Some specified paths were not resolved, unable to cache dependencies.'
-    );
-  }
 
   const primaryKey = `node-cache-${platform}-${packageManager}-${fileHash}`;
   core.debug(`primary key is ${primaryKey}`);

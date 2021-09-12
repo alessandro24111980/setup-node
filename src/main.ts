@@ -51,8 +51,7 @@ export async function run() {
       if (isGhes()) {
         throw new Error('Caching is not supported on GHES');
       }
-      const cacheDependencyPath = core.getInput('cache-dependency-path');
-      await restoreCache(cache, cacheDependencyPath);
+      await restoreCache(cache);
     }
 
     const matchersPath = path.join(__dirname, '../..', '.github');
